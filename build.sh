@@ -109,4 +109,29 @@ if [ ! "$SILENT" = true ] && [ -f OpenSprinkler.service ] && [ -f startOpenSprin
     systemctl start OpenSprinkler
 fi
 
+# Install NetworkMonitor service
+if [ -f NetworkMonitor.service ] && [ -f monitorNetwork.sh ] && [ ! -f /etc/systemd/system/NetworkMonitor.service ]; then
+    echo "Adding NetworkMonitor service..."
+    
+    # Get current directory (script location)
+    pushd "$(dirname $0)" > /dev/null
+    DIR="$(pwd)"
+    popd > /dev/null
+    
+    # Make monitorNetwork.sh executable
+    chmod +x monitorNetwork.sh
+    
+    # Update script location in service file
+    sed -e 's,\_\_NetworkMonitor\_Path\_\_,'"$DIR"',g' NetworkMonitor.service > /etc/systemd/system/NetworkMonitor.service
+    
+    # Reload systemd
+    systemctl daemon-reload
+    
+    # Enable and start the service
+    systemctl enable NetworkMonitor
+    systemctl start NetworkMonitor
+    
+    echo "NetworkMonitor service installed and started"
+fi
+
 echo "Done!"

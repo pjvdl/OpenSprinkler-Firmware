@@ -2,7 +2,6 @@ logs/**
 OpenSprinkler
 wtopts.txt
 *.dat
-*.sh
 build-1284/*
 .vscode
 .pio

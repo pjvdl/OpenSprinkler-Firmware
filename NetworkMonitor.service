@@ -1,0 +1,19 @@
+[Unit]
+Description=Network Connectivity Monitor
+Wants=network-online.target
+After=network.target network-online.target
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=10
+User=root
+WorkingDirectory=__NetworkMonitor_Path__
+ExecStart=/bin/bash __NetworkMonitor_Path__/monitorNetwork.sh
+StandardError=journal
+StandardOutput=journal
+StandardInput=null
+
+[Install]
+WantedBy=multi-user.target
+
