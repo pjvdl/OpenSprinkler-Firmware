@@ -4,9 +4,9 @@
 # Monitors network connectivity and logs status changes
 
 # Configuration
-INTERVAL=5                    # Check interval in seconds
+INTERVAL=10                   # Check interval in seconds
 LOG_FILE="/var/log/network_monitor.log"  # Log file path
-HOSTS=("8.8.8.8" "1.1.1.1")  # Default hosts to ping (Google DNS, Cloudflare DNS)
+HOSTS=("8.8.8.8" "1.1.1.1")   # Default hosts to ping (Google DNS, Cloudflare DNS)
 PING_COUNT=2                  # Number of ping packets to send
 PING_TIMEOUT=3                # Ping timeout in seconds
 ALERT_ON_FAILURE=true         # Alert when connectivity is lost

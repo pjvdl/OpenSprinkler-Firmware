@@ -54,7 +54,9 @@ if [ "$1" == "demo" ]; then
     ws=$(ls external/TinyWebsockets/tiny_websockets_lib/src/*.cpp)
     otf=$(ls external/OpenThings-Framework-Firmware-Library/*.cpp)
     g++ -o OpenSprinkler -DDEMO -DSMTP_OPENSSL $DEBUG -std=c++14 -include string.h -include cstdint main.cpp OpenSprinkler.cpp program.cpp opensprinkler_server.cpp utils.cpp weather.cpp gpio.cpp mqtt.cpp notifier.cpp smtp.c RCSwitch.cpp -Iexternal/TinyWebsockets/tiny_websockets_lib/include $ws -Iexternal/OpenThings-Framework-Firmware-Library/ $otf -lpthread -lmosquitto -lssl -lcrypto
-else
+
+# only compile ospi if it is not already compiled
+elif [ "$1" == "ospi" ] && [ ! -f OpenSprinkler ]; then
 	echo "Installing required libraries..."
 	apt-get update
 	# Switched from libgpiod-dev to liblgpio-dev
@@ -79,7 +81,15 @@ if [ -f /etc/init.d/OpenSprinkler.sh ]; then
     rm /etc/init.d/OpenSprinkler.sh
 fi
 
-if [ ! "$SILENT" = true ] && [ -f OpenSprinkler.service ] && [ -f startOpenSprinkler.sh ] && [ ! -f /etc/systemd/system/OpenSprinkler.service ]; then
+if [ ! "$SILENT" = true ] && [ -f OpenSprinkler.service ] && [ -f startOpenSprinkler.sh ]; then
+
+    if [ -f /etc/systemd/system/OpenSprinkler.service ]; then
+        echo "OpenSprinkler service already exists. Rebuild?"
+        read -p "y/n: " -n 1 -r
+        if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+            exit 0
+        fi
+    fi
 
 	read -p "Do you want to start OpenSprinkler on startup? " -n 1 -r
 	echo
@@ -110,7 +120,15 @@ if [ ! "$SILENT" = true ] && [ -f OpenSprinkler.service ] && [ -f startOpenSprin
 fi
 
 # Install NetworkMonitor service
-if [ -f NetworkMonitor.service ] && [ -f monitorNetwork.sh ] && [ ! -f /etc/systemd/system/NetworkMonitor.service ]; then
+if [ -f NetworkMonitor.service ] && [ -f monitorNetwork.sh ]; then
+    if [ -f /etc/systemd/system/NetworkMonitor.service ]; then
+        echo "NetworkMonitor service already exists. Rebuild?"
+        read -p "y/n: " -n 1 -r
+        if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+            exit 0
+        fi
+    fi
+
     echo "Adding NetworkMonitor service..."
     
     # Get current directory (script location)
