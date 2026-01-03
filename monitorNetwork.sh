@@ -4,7 +4,7 @@
 # Monitors network connectivity and logs status changes
 
 # Configuration
-INTERVAL=10                   # Check interval in seconds
+INTERVAL=30                   # Check interval in seconds
 LOG_FILE="/var/log/network_monitor.log"  # Log file path
 HOSTS=("8.8.8.8" "1.1.1.1")   # Default hosts to ping (Google DNS, Cloudflare DNS)
 PING_COUNT=2                  # Number of ping packets to send
@@ -12,7 +12,7 @@ PING_TIMEOUT=3                # Ping timeout in seconds
 ALERT_ON_FAILURE=true         # Alert when connectivity is lost
 ALERT_ON_RECOVERY=true        # Alert when connectivity is restored
 REBOOT_ON_FAILURE=true        # Reboot system when network is down
-FAILURE_THRESHOLD=6           # Number of consecutive failures before reboot (6 * 5s = 30s)
+FAILURE_THRESHOLD=6           # Number of consecutive failures before reboot (6 * 30s = 3m)
 
 # Colors for output
 RED='\033[0;31m'
